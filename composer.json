@@ -1,0 +1,16 @@
+{
+    "name": "balazsvecsei/prettysql",
+    "description": "Fast and nice mysql query builder for php",
+    "autoload": {
+        "psr-4": {
+            "Balazsvecsei\\Prettysql\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Balazs Vecsei",
+            "email": "balazs.vecsei@gmail.com"
+        }
+    ],
+    "require": {}
+}
