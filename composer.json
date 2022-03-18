@@ -3,7 +3,7 @@
     "description": "Fast and nice mysql query builder for php",
     "autoload": {
         "psr-4": {
-            "Balazsvecsei\\Prettysql\\": "src/"
+            "Prettysql\\": "src/"
         }
     },
     "authors": [
@@ -12,5 +12,7 @@
             "email": "balazs.vecsei@gmail.com"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    }
 }
