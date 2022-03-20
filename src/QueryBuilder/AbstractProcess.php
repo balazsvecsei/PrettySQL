@@ -13,4 +13,9 @@ abstract class AbstractProcess
         $this->createQuery();
         return $this->query;
     }
+
+    public function exec()
+    {
+        $this->getQuery();
+    }
 }

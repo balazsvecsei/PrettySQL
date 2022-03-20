@@ -34,10 +34,13 @@ class CreateProcess extends AbstractProcess
         $columns = "";
 
         if (!empty($this->columns)) {
-            foreach ($this->columns as $column) {
-                $columns .= " " . $column['name'] . " " . $column['type'] . " " . $column['nullable'];
-            }
-            $query .= "$query ($columns)";
+            $columns = array_map(fn ($column) => implode(" ", [
+                "name" => $column["name"],
+                "key" => $column["key"],
+                "type" => $column["type"],
+            ]), $this->columns);
+            $columns = implode(", ", $columns);
+            $query = "$query ($columns)";
         }
 
         $this->query = $query;
@@ -61,13 +64,13 @@ class CreateProcess extends AbstractProcess
 
     public function integer($columnName)
     {
-        $this->addColumn($columnName, null, "INT", 50, true);
+        $this->addColumn("'$columnName'", null, "INT", null, true);
         return $this;
     }
 
-    public function string($name, $size = 255)
+    public function string($columnName, $size = 255)
     {
-        # code...
+        $this->addColumn("'$columnName'", null, "VARCHAR($size)", null, true);
         return $this;
     }
 
