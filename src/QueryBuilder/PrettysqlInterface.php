@@ -2,10 +2,8 @@
 
 namespace Prettysql\QueryBuilder;
 
-interface QueryBuilderInterface
+interface PrettysqlInterface
 {
-    public function run();
-    public function write();
 
     public function create($tableName);
     public function insert();
