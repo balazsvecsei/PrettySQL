@@ -10,7 +10,7 @@ class CreateProcess extends AbstractProcess
     public $tableName;
     public const CREATE = "CREATE TABLE";
 
-    private $columns = [];
+    public $collate = "utf8_hungarian_ci";
 
     public function setTable($name)
     {
@@ -25,50 +25,31 @@ class CreateProcess extends AbstractProcess
 
     public function createQuery()
     {
-        $query = self::CREATE . " " . $this->tableName;
+
+        $query = self::CREATE . " `$this->tableName`";
 
         if (!empty($this->columns)) {
-            $columns = array_map(
-                function ($column) {
-                    return implode(" ", [
-                        "name" => $column["name"],
-                        "key" => $column["key"] ? "" : "",
-                        "type" => $column["type"],
-                        "size" => $column["size"],
-                        "nullable" => $column["nullable"] ? "" : "NOT NULL",
-                        "uniqe" => $column["uniqe"] ? "UNIQUE" : "",
-
-                    ]);
-                },
-                $this->columns
-            );
-            $columns = implode(", ", $columns);
-            $query = "$query ($columns)";
+            $columns = self::renderColumns();
+            $query = "$query (@@$columns@@)";
         }
+
+        $query .= " COLLATE='$this->collate';";
 
         $this->query = $query;
 
         return $this;
     }
 
-    public function addColumn($name, $key, $type, $size, $nullable, $uniqe)
+    public function addColumn(string $name, array $attributes = ["col_type" => "VARCHAR"])
     {
-        array_push($this->columns, [
-            "col_name" => $name,
-            "col_key" => $key,
-            "col_type" => $type,
-            "col_size" => $size,
-            "col_nullable" => $nullable,
-            "col_uniqe" => $uniqe,
-        ]);
+        array_push($this->columns, array_merge(["col_name" => $name], $attributes));
         return $this;
     }
 
 
-
     public function setColumn($columnName, $attributes)
     {
-        $selectedColumnIndex = array_search("'$columnName'", array_column($this->columns, "col_name"));
+        $selectedColumnIndex = $this->getColumnIndexByName($columnName);
 
         $column = $this->columns[$selectedColumnIndex];
 
@@ -83,21 +64,64 @@ class CreateProcess extends AbstractProcess
         return $this;
     }
 
-    public function integer($columnName)
+    public function getColumnIndexByName($columnName)
     {
-        $this->addColumn("'$columnName'", false, "INT", null, true, false);
+        return array_search($columnName, array_column($this->columns, "col_name"));
+    }
+
+    public function integer(
+        $columnName,
+        $size = null,
+        $nullable = true,
+        $uniqe = false,
+        $default = "NULL",
+        $key = false,
+        $type = "INT"
+    ) {
+        $this->addColumn($columnName, [
+            "col_key" => $key,
+            "col_type" => $type,
+            "col_size" => $size,
+            "col_nullable" => $nullable,
+            "col_uniqe" => $uniqe,
+            "col_default" => $default
+        ]);
+
         return $this;
     }
 
-    public function string($columnName, $size = 255)
+    public function string(
+        $columnName,
+        $size = 50,
+        $nullable = true,
+        $uniqe = false,
+        $default = "NULL",
+        $key = false,
+        $type = "VARCHAR"
+    ) {
+        $this->addColumn($columnName, [
+            "col_key" => $key,
+            "col_type" => $type,
+            "col_size" => $size,
+            "col_nullable" => $nullable,
+            "col_uniqe" => $uniqe,
+            "col_default" => $default
+        ]);
+        return $this;
+    }
+
+    public function setToPrimary($columnName)
     {
-        $this->addColumn("'$columnName'", null, "VARCHAR($size)", null, true, false);
+
+        $this->setColumn($columnName, ["col_key" => true, "col_nullable" => false]);
+
         return $this;
     }
 
     public function id()
     {
-        # code...
+        $this->integer('id')->setToPrimary('id');
+
         return $this;
     }
 }
