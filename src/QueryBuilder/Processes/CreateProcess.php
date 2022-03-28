@@ -3,20 +3,18 @@
 namespace Prettysql\QueryBuilder\Processes;
 
 use Prettysql\QueryBuilder\AbstractProcess;
+use \Prettysql\QueryBuilder\Traits\ColumnCreateTrait as ColumnsTrait;
+
 
 class CreateProcess extends AbstractProcess
 {
+    use ColumnsTrait;
+
     public $query;
-    public $tableName;
     public const CREATE = "CREATE TABLE";
 
     public $collate = "utf8_hungarian_ci";
 
-    public function setTable($name)
-    {
-        $this->tableName = $name;
-        return $this;
-    }
 
     public function getTableName()
     {
@@ -76,7 +74,8 @@ class CreateProcess extends AbstractProcess
         $uniqe = false,
         $default = "NULL",
         $key = false,
-        $type = "INT"
+        $type = "INT",
+        $autoincrement = false
     ) {
         $this->addColumn($columnName, [
             "col_key" => $key,
@@ -84,7 +83,8 @@ class CreateProcess extends AbstractProcess
             "col_size" => $size,
             "col_nullable" => $nullable,
             "col_uniqe" => $uniqe,
-            "col_default" => $default
+            "col_default" => $default,
+            "col_autoincrement" => $autoincrement
         ]);
 
         return $this;
@@ -97,7 +97,8 @@ class CreateProcess extends AbstractProcess
         $uniqe = false,
         $default = "NULL",
         $key = false,
-        $type = "VARCHAR"
+        $type = "VARCHAR",
+        $autoincrement = false
     ) {
         $this->addColumn($columnName, [
             "col_key" => $key,
@@ -105,7 +106,8 @@ class CreateProcess extends AbstractProcess
             "col_size" => $size,
             "col_nullable" => $nullable,
             "col_uniqe" => $uniqe,
-            "col_default" => $default
+            "col_default" => $default,
+            "col_autoincrement" => $autoincrement
         ]);
         return $this;
     }
@@ -113,7 +115,7 @@ class CreateProcess extends AbstractProcess
     public function setToPrimary($columnName)
     {
 
-        $this->setColumn($columnName, ["col_key" => true, "col_nullable" => false]);
+        $this->setColumn($columnName, ["col_key" => true, "col_nullable" => false, "col_autoincrement" => true]);
 
         return $this;
     }

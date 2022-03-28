@@ -2,13 +2,26 @@
 
 namespace Prettysql;
 
-class PSql implements QueryBuilder\PrettysqlInterface
+class PSql
 {
 
-    private $table;
+    public $table;
     public string $query;
 
     private $process;
+
+    public Database $database;
+
+    public static PSql $psql;
+
+    public function __construct(Database $database, string $table = null)
+    {
+        $this->defineTable($table);
+
+        $this->database = $database;
+
+        self::$psql = $this;
+    }
 
     private $processClasses = [
         "create" => QueryBuilder\Processes\CreateProcess::class,
@@ -16,28 +29,34 @@ class PSql implements QueryBuilder\PrettysqlInterface
         "select" => QueryBuilder\Processes\SelectProcess::class,
     ];
 
-
-    public function run()
+    public function defineTable($table)
     {
-        return $this->query;
+        $this->table = $table;
     }
 
-    public function create($tableName)
+    public static function __callStatic(string $statement, array $params)
     {
-        $process = new $this->processClasses["create"]();
-        $process = $process->setTable($tableName);
+        if (array_key_exists($statement, self::$psql->processClasses)) {
+            $tableName = array_key_exists(0, $params) ? $params[0] : self::$psql->table;
 
-        $this->process = $process;
-        return $this->process;
+            $process = new self::$psql->processClasses[$statement]();
+
+            $process = $process->setTable($tableName);
+
+            self::$psql->process = $process;
+
+            return $process;
+        }
     }
 
-    public function select()
+    public function exec()
     {
-        $this->Process = new QueryBuilder\Processes\SelectProcess();
-    }
+        $query = $this->process->getQuery();
 
-    public function insert()
-    {
-        $this->Process = new QueryBuilder\Processes\InsertProcess();
+        if ($this->process::class ==  $this->processClasses["select"]) {
+            return $this->database->exec($query)->fetchAll();
+        } else {
+            $this->database->exec($query);
+        }
     }
 }

@@ -4,11 +4,18 @@ namespace Prettysql\QueryBuilder;
 
 abstract class AbstractProcess
 {
+    public $tableName;
     public $query;
     public $columns = [];
     public $primaryKey = null;
 
     abstract function createQuery();
+
+    public function setTable($name)
+    {
+        $this->tableName = $name;
+        return $this;
+    }
 
     public function getQuery(): string
     {
@@ -23,17 +30,16 @@ abstract class AbstractProcess
         $this->createQuery();
         $query = str_replace("@@", '<br>', $this->query);
         $query = str_replace("-----", ' &emsp;', $query);
-        return $query;
+        echo $query;
     }
 
     public function exec()
     {
-        $this->getQuery();
+        return \Prettysql\PSql::$psql->exec();
     }
 
     public function renderColumns()
     {
-
 
         $columns = array_map(
             function ($column) {
@@ -63,10 +69,11 @@ abstract class AbstractProcess
                     if ($key == "col_type" && $value == "INT") {
                         unset($column['col_default']);
                     }
+
+                    if ($key == "col_autoincrement" && $value == true) {
+                        $column[$key] = "AUTO_INCREMENT";
+                    }
                 }
-
-
-
                 return implode(" ", $column);
             },
             $this->columns
@@ -77,5 +84,10 @@ abstract class AbstractProcess
         if ($this->primaryKey) $columns .= ", @@PRIMARY KEY ($this->primaryKey)";
 
         return (string) $columns;
+    }
+
+    public function __destruct()
+    {
+        //echo $this->write();
     }
 }
