@@ -2,12 +2,15 @@
 
 namespace Prettysql\QueryBuilder;
 
+use Prettysql\PSql;
+
 abstract class AbstractProcess
 {
     public $tableName;
     public $query;
     public $columns = [];
     public $primaryKey = null;
+    public $columnTemplate;
 
     abstract function createQuery();
 
@@ -22,12 +25,15 @@ abstract class AbstractProcess
 
         $this->createQuery();
 
-        return str_replace(["@@", "-----"], '', $this->query);
+        $queryUnformatted = str_replace(["@@", "-----"], '', $this->query);
+
+        return $queryUnformatted;
     }
 
     public function write()
     {
         $this->createQuery();
+
         $query = str_replace("@@", '<br>', $this->query);
         $query = str_replace("-----", ' &emsp;', $query);
         echo $query;
@@ -84,6 +90,17 @@ abstract class AbstractProcess
         if ($this->primaryKey) $columns .= ", @@PRIMARY KEY ($this->primaryKey)";
 
         return (string) $columns;
+    }
+
+
+    public function getColumnsFromDb()
+    {
+        $this->columnTemplate = PSql::$psql->database
+            ->exec("SELECT *
+                    FROM INFORMATION_SCHEMA.COLUMNS
+                    WHERE TABLE_NAME = N'{$this->tableName}'")
+            ->fetchAll();
+        return $this->columnTemplate;
     }
 
     public function __destruct()

@@ -11,15 +11,11 @@ class CreateProcess extends AbstractProcess
     use ColumnsTrait;
 
     public $query;
-    public const CREATE = "CREATE TABLE";
+    public const CREATE = "CREATE TABLE IF NOT EXISTS";
 
     public $collate = "utf8_hungarian_ci";
 
 
-    public function getTableName()
-    {
-        return $this->tableName;
-    }
 
     public function createQuery()
     {
@@ -65,51 +61,6 @@ class CreateProcess extends AbstractProcess
     public function getColumnIndexByName($columnName)
     {
         return array_search($columnName, array_column($this->columns, "col_name"));
-    }
-
-    public function integer(
-        $columnName,
-        $size = null,
-        $nullable = true,
-        $uniqe = false,
-        $default = "NULL",
-        $key = false,
-        $type = "INT",
-        $autoincrement = false
-    ) {
-        $this->addColumn($columnName, [
-            "col_key" => $key,
-            "col_type" => $type,
-            "col_size" => $size,
-            "col_nullable" => $nullable,
-            "col_uniqe" => $uniqe,
-            "col_default" => $default,
-            "col_autoincrement" => $autoincrement
-        ]);
-
-        return $this;
-    }
-
-    public function string(
-        $columnName,
-        $size = 50,
-        $nullable = true,
-        $uniqe = false,
-        $default = "NULL",
-        $key = false,
-        $type = "VARCHAR",
-        $autoincrement = false
-    ) {
-        $this->addColumn($columnName, [
-            "col_key" => $key,
-            "col_type" => $type,
-            "col_size" => $size,
-            "col_nullable" => $nullable,
-            "col_uniqe" => $uniqe,
-            "col_default" => $default,
-            "col_autoincrement" => $autoincrement
-        ]);
-        return $this;
     }
 
     public function setToPrimary($columnName)
