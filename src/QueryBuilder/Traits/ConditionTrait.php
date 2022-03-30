@@ -1,12 +1,35 @@
 <?php
 
-namespace Prettysql\QueryBuilder;
+namespace Prettysql\QueryBuilder\Traits;
 
-
-
-class ConditionBuilder
+trait ConditionTrait
 {
     public $conditionArray = [];
+
+    /**
+     * whereIs
+     * Add WHERE $column = $value condition to query
+     *
+     * @param  mixed $column
+     * @param  mixed $value
+     * @return void
+     */
+    public function whereIs(string $column, $value)
+    {
+        return $this->and($column, '=', $value);
+    }
+
+    /**
+     * whereId
+     * Shorthand to whereIs method
+     *
+     * @param  mixed $id
+     * @return void
+     */
+    public function whereId(int $id)
+    {
+        return $this->and('id', '=', $id);
+    }
 
 
     /**
