@@ -9,7 +9,7 @@ class Database implements DatabaseInterface
 {
     private $connection;
 
-    public function __construct($dbhost = "localhost", $dbname = "myDataBaseName", $username = "root", $password    = "")
+    public function __construct($dbhost = "localhost", $dbname = "myDataBaseName", $username = "root", $password = "")
     {
         try {
 

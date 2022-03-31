@@ -8,9 +8,27 @@ use \Prettysql\QueryBuilder\Traits\ColumnCreateTrait as ColumnsTrait;
 
 class CreateProcess extends AbstractProcess
 {
+    /* AbstractProcess
+
+    $this->$tableName;
+    $this->$query;
+    $this->$columns = [];
+    $this->$primaryKey = null;
+    $this->$columnTemplate;
+
+    $this->getQuery(): string
+    $this->write()
+    $this->exec()
+    $this->renderColumns()
+    $this->getColumnsFromDb()
+    */
+
+    /* ColumnsTrait as ColumnCreateTrait
+    $this->integer(...): CreateProcess;
+    $this->string(...): CreateProcess;
+    */
     use ColumnsTrait;
 
-    public $query;
     public const CREATE = "CREATE TABLE IF NOT EXISTS";
 
     public $collate = "utf8_hungarian_ci";

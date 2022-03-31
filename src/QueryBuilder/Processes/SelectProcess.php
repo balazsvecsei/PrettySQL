@@ -3,9 +3,36 @@
 namespace Prettysql\QueryBuilder\Processes;
 
 use Prettysql\QueryBuilder\AbstractProcess;
+use Prettysql\QueryBuilder\Traits\ConditionTrait;
 
 class SelectProcess extends AbstractProcess
 {
+    /* AbstractProcess
+
+    $this->$tableName;
+    $this->$query;
+    $this->$columns = [];
+    $this->$primaryKey = null;
+    $this->$columnTemplate;
+
+    $this->getQuery(): string
+    $this->write()
+    $this->exec()
+    $this->renderColumns()
+    $this->getColumnsFromDb()
+    */
+
+    /* ConcitionTrait
+    $this->whereIs(string $column, $value): SelectProcess;
+    $this->whereId(int $id): SelectProcess;
+    $this->and($column, $operator, $value): SelectProcess;
+    $this->or($column, $operator, $value): SelectProcess;
+    $this->renderConditions(): string;
+    */
+    use ConditionTrait;
+
+
+
     public const SELECT = "SELECT";
 
     public $limit = 100;
@@ -13,8 +40,6 @@ class SelectProcess extends AbstractProcess
     public $orderBy = false;
 
     public $sorting = "ASC";
-
-    public $conditionArray = [];
 
     public $like = "";
 
@@ -129,62 +154,6 @@ class SelectProcess extends AbstractProcess
         return $this;
     }
 
-    /**
-     * whereIs
-     * Add WHERE $column = $value condition to query
-     *
-     * @param  mixed $column
-     * @param  mixed $value
-     * @return void
-     */
-    public function whereIs(string $column, $value)
-    {
-        return $this->and($column, '=', $value);
-    }
-
-    /**
-     * whereId
-     * Shorthand to whereIs method
-     *
-     * @param  mixed $id
-     * @return void
-     */
-    public function whereId(int $id)
-    {
-        return $this->and('id', '=', $id);
-    }
-
-    /**
-     * and
-     * Define logical condition to query with AND operator
-     * ex.: [existing condition...] AND price > 120
-     *
-     * @param  mixed $column
-     * @param  mixed $operator
-     * @param  mixed $value
-     * @return void
-     */
-    public function and($column, $operator, $value)
-    {
-        array_push($this->conditionArray, ["AND", $column, $operator, $value]);
-        return $this;
-    }
-
-    /**
-     * or
-     * Define logical condition to query with OR operator
-     * ex.: [existing condition...] OR price > 120
-     *
-     * @param  mixed $column
-     * @param  mixed $operator
-     * @param  mixed $value
-     * @return void
-     */
-    public function or($column, $operator, $value)
-    {
-        array_push($this->conditionArray, ["OR", $column, $operator, $value]);
-        return $this;
-    }
 
     /**
      * like

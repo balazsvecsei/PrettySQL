@@ -28,6 +28,8 @@ class PSql
         "insert" => QueryBuilder\Processes\InsertProcess::class,
         "select" => QueryBuilder\Processes\SelectProcess::class,
         "delete" => QueryBuilder\Processes\DeleteProcess::class,
+        "drop" => QueryBuilder\Processes\DropProcess::class,
+        "update" => QueryBuilder\Processes\UpdateProcess::class,
     ];
 
     public function defineTable($table)
