@@ -39,7 +39,7 @@ psql::insert("users")->row([
 ]);
 ```
 
-## Insert
+# Insert
 The static statement: `psql::insert()`
 Parameterizing the query:
 #### row()
