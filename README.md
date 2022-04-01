@@ -19,7 +19,7 @@ You must first initialize an instance in your namespace. In the first argument, 
 new PSql(Database $database, 'users');
 ```
 Example for select the first row, and insert another:
-```
+```php
 new PSql(Database $database, 'users');
 
 $firstUser = psql::select()->first();
@@ -30,13 +30,13 @@ psql::insert()->row([
 ]);
 ```
 ### Initialize for multytable usage
-```
+```php
 new Psql(Database $database);
 ```
 In this case, the table name must be defined in the statement argument. 
 
 Example for select the first row, and insert another:
-```
+```php
 new PSql(Database $database);
 
 $firstUser = psql::select("users")->first();
