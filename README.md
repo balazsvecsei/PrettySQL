@@ -46,3 +46,73 @@ psql::insert("users")->row([
     "email"=>"cloehilton@gmail.com"
 ]);
 ```
+
+## Insert
+The static statement: `psql::insert()`
+Parameterizing the query:
+#### row()
+Passing 1 row to table
+```php
+psql::insert()->row(["column"=>"value", "column"=>"value"]);
+```
+#### collection()
+Passing more row to table
+```php
+psql::insert()->collection([
+    ["column"=>"value", "column"=>"value"],
+    ["column"=>"value", "column"=>"value"],
+    ...
+]);
+```
+
+## Select
+The static statement: `psql::select()`
+
+General example of listing products in a webshop
+```php
+
+psql::select()
+        ->orderBy("uploaded_time", "ASC")
+        ->selectColumns(["name", "image", "price"])
+        ->whereIs("in_stock", true)
+        ->and("quantity" ">=" 20)
+        ->or("available" "==" true)
+    
+```
+
+Parameterizing the query:
+
+#### whereId()
+Select by id
+```php
+psql::select()->whereId(3);
+```
+
+#### first()
+Select the first item in table
+```php
+psql::select()->first();
+```
+
+#### latest()
+Select the last item in table
+```php
+psql::select()->last();
+```
+#### orderBy()
+Ordering and sorting the results by column. First argument `column` (default: id) second `sort`(default: ASC)
+```php
+psql::select()->orderBy("name", "DESC");
+```
+
+#### selectColumns()
+Select columns
+```php
+psql::select()->selectColumns(["id", "firstname", "lastname", "image"]);
+```
+
+#### setLimit()
+Set the quantity of rows
+```php
+psql::select()->setLimit(100);
+```
