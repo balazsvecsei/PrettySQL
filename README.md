@@ -21,7 +21,9 @@ new PSql(Database $database, 'users');
 Example for select the first row, and insert another:
 ```
 new PSql(Database $database, 'users');
+
 $firstUser = psql::select()->first();
+
 psql::insert()->row([
     "name"=>"Cloe Hilton",
     "email"=>"cloehilton@gmail.com"
@@ -36,7 +38,9 @@ In this case, the table name must be defined in the statement argument.
 Example for select the first row, and insert another:
 ```
 new PSql(Database $database);
+
 $firstUser = psql::select("users")->first();
+
 psql::insert("users")->row([
     "name"=>"Cloe Hilton",
     "email"=>"cloehilton@gmail.com"
