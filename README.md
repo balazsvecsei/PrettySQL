@@ -2,14 +2,6 @@
 Fast and nice mysql query builder for php.
 
 
-## Statements
-- [x] Select 
-- [x] Create
-- [ ] Insert
-- [x] Delete 
-- [x] Drop 
-- [ ] Update 
-- [ ] Alter 
 
 ## Initialize
 You must first initialize an instance in your namespace. In the first argument, you need to inject the database interface and then optionally the table. (If you want to use your instance with only 1 table)
