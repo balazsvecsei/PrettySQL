@@ -15,7 +15,7 @@ Fast and nice mysql query builder for php.
 You must first initialize an instance in your namespace. In the first argument, you need to inject the database interface and then optionally the table. (If you want to use your instance with only 1 table)
 
 ### Initialize with only 1 table
-```
+```php
 new PSql(Database $database, 'users');
 ```
 Example for select the first row, and insert another:
