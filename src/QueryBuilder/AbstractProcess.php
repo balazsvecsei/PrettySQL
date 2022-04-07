@@ -3,8 +3,9 @@
 namespace Prettysql\QueryBuilder;
 
 use Prettysql\PSql;
+use Prettysql\QueryBuilder\Processes\ProcessInterface;
 
-abstract class AbstractProcess
+abstract class AbstractProcess implements ProcessInterface
 {
     public $tableName;
     public $query;
